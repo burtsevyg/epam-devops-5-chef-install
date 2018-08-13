@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
       vb.cpus = 4
     end
     server.vm.network "private_network", ip: "192.168.0.3"
-    server.vm.hostname = "chefdk"
+    server.vm.hostname = "server"
     server.vm.provision "shell", path: "chef-server-install.sh"
   end
 

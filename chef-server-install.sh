@@ -18,14 +18,14 @@ chef-server-ctl org-create epam 'Epam, Inc.' --association_user admin --filename
 echo "################### install chef-manage ###################"
 chef-server-ctl install chef-manage
 chef-server-ctl reconfigure
-chef-server-ctl reconfigure
+chef-manage-ctl reconfigure --accept-license
 
 echo "################### install opscode-push-jobs-server ###################"
 chef-server-ctl install opscode-push-jobs-server
 chef-server-ctl reconfigure
-opscode-push-jobs-server-ctl reconfigure
+opscode-push-jobs-server-ctl reconfigure --accept-license
 
 echo "################### install opscode-reporting ###################"
 chef-server-ctl install opscode-reporting
 chef-server-ctl reconfigure
-opscode-reporting-ctl reconfigure
+opscode-reporting-ctl reconfigure --accept-license

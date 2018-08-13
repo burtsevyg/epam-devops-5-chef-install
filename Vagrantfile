@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
     end
     server.vm.network "private_network", ip: "192.168.0.3"
     server.vm.hostname = "chefdk"
-    server.vm.provision "shell", path: "chef-server-install.sh", privileged: false
+    server.vm.provision "shell", path: "chef-server-install.sh"
   end
 
 # Client

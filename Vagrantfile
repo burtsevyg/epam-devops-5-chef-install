@@ -8,6 +8,7 @@ Vagrant.configure("2") do |config|
     end
     ws.vm.network "private_network", ip: "192.168.0.2"
     ws.vm.hostname = "ws"
+    ws.vm.provision "shell", path: "dns.sh", privileged: true
     ws.vm.provision "shell", path: "chef-ws-install.sh", privileged: false
   end
 
@@ -20,7 +21,8 @@ Vagrant.configure("2") do |config|
     end
     server.vm.network "private_network", ip: "192.168.0.3"
     server.vm.hostname = "server"
-    server.vm.provision "shell", path: "chef-server-install.sh"
+    server.vm.provision "shell", path: "dns.sh", privileged: true
+    server.vm.provision "shell", path: "chef-server-install.sh", privileged: true
   end
 
 # Client
@@ -32,6 +34,7 @@ Vagrant.configure("2") do |config|
     end
     client.vm.network "private_network", ip: "192.168.0.4"
     client.vm.hostname = "chefdk"
+    client.vm.provision "shell", path: "dns.sh", privileged: true
     client.vm.provision "shell", path: "chef-client-install.sh", privileged: false
   end
 end

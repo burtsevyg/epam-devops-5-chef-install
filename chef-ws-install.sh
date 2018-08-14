@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -e
 
 echo "Install chef dk"
@@ -17,3 +18,4 @@ chef generate app chef-repo
 mkdir -p ~/chef-repo/.chef
 
 echo '.chef' >> ~/chef-repo/.gitignore
+

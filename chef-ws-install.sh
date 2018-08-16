@@ -19,3 +19,6 @@ mkdir -p ~/chef-repo/.chef
 
 echo '.chef' >> ~/chef-repo/.gitignore
 
+scp root@server:/root/admin.pem ~/chef-repo/.chef
+scp root@server:/root/admin-validator.pem ~/chef-repo/.chef
+

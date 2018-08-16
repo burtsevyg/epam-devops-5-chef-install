@@ -1,17 +1,4 @@
 Vagrant.configure("2") do |config|
-# Workstation
-  config.vm.define "ws" do |ws|
-    ws.vm.box = "ubuntu/xenial64"
-    ws.vm.provider "virtualbox" do |vb|
-      vb.memory = 1024
-      vb.cpus = 2
-    end
-    ws.vm.network "private_network", ip: "192.168.0.2"
-    ws.vm.hostname = "ws"
-    ws.vm.provision "shell", path: "dns.sh", privileged: true
-    ws.vm.provision "shell", path: "chef-ws-install.sh", privileged: false
-  end
-
 # Server
   config.vm.define "server" do |server|
     server.vm.box = "ubuntu/xenial64"
@@ -23,6 +10,27 @@ Vagrant.configure("2") do |config|
     server.vm.hostname = "server"
     server.vm.provision "shell", path: "dns.sh", privileged: true
     server.vm.provision "shell", path: "chef-server-install.sh", privileged: true
+  end
+
+# Workstation
+  config.vm.define "ws" do |ws|
+    ws.vm.box = "ubuntu/xenial64"
+    ws.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      vb.cpus = 2
+    end
+    ws.vm.network "private_network", ip: "192.168.0.2"
+    ws.vm.hostname = "ws"
+    ws.vm.provision "shell" do |s|
+      ssh_insecure_key = File.readlines("#{Dir.home}/.vagrant.d/insecure_private_key").first.strip
+      s.inline = <<-SHELL
+        echo #{ssh_insecure_key} >> /home/vagrant/.ssh/id_rsa
+        chown vagrant /home/vagrant/.ssh/id_rsa
+        chmod 400 /home/vagrant/.ssh/id_rsa
+      SHELL
+    end
+    ws.vm.provision "shell", path: "dns.sh", privileged: true
+    ws.vm.provision "shell", path: "chef-ws-install.sh", privileged: false
   end
 
 # Client

@@ -16,9 +16,6 @@ echo "################### add admin user and group epam ###################"
 chef-server-ctl user-create admin Admin Admin admin@admin.com 'PASSWORD' --filename ~/admin.pem
 chef-server-ctl org-create epam 'Epam, Inc.' --association_user admin --filename ~/admin-validator.pem
 
-scp ~/admin.pem
-scp ~/admin-validator.pem
-
 echo "################### install chef-manage ###################"
 chef-server-ctl install chef-manage
 chef-server-ctl reconfigure

@@ -2,6 +2,5 @@
 
 set -e
 
-sudo
-
 echo "Install chef node"
+

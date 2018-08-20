@@ -12,7 +12,7 @@ dpkg -i chef-server-core_12.17.33-1_amd64.deb
 echo "################### start all services ###################"
 chef-server-ctl reconfigure
 
-echo "################### add admin user and group epam ###################"
+echo "################### add admin user and organization epam ###################"
 chef-server-ctl user-create admin Admin Admin admin@admin.com 'PASSWORD' --filename ~/admin.pem
 chef-server-ctl org-create epam 'Epam, Inc.' --association_user admin --filename ~/admin-validator.pem
 

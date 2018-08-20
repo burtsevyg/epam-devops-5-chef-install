@@ -15,10 +15,13 @@ echo "export PATH=$(which ruby):\$PATH" >> ~/.bash_profile && source ~/.bash_pro
 
 chef generate app chef-repo
 
-mkdir -p ~/chef-repo/.chef
-
 echo '.chef' >> ~/chef-repo/.gitignore
 
 scp root@server:/root/admin.pem ~/chef-repo/.chef
 scp root@server:/root/admin-validator.pem ~/chef-repo/.chef
+
+cd ~/chef-repo/
+knife ssl fetch
+
+knife bootstrap client --sudo
 

@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
     server.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys", privileged: false
     server.vm.provision 'shell', inline: "chmod 600 /root/.ssh/authorized_keys"
     server.vm.provision 'shell', inline: "chmod 600 /home/vagrant/.ssh/authorized_keys", privileged: false
+    server.vm.provision 'shell', inline: "echo 'PasswordAuthentication no' >> /etc/ssh/ssh_config"
 
     server.vm.provision "shell", path: "dns.sh", privileged: true
     server.vm.provision "shell", path: "chef-server-install.sh", privileged: true
@@ -32,7 +33,8 @@ Vagrant.configure("2") do |config|
     ws.vm.hostname = "ws"
 
     ws.vm.provision "file", source: ".ssh/id_rsa", destination: "/home/vagrant/.ssh/id_rsa"
-    ws.vm.provision "file", source: ".ssh/id_rsa", destination: "/root/id_rsa"
+    ws.vm.provision "file", source: "knife.rb", destination: "/home/vagrant/chef-repo/.chef/knife.rb"
+    ws.vm.provision "shell", inline: "cp -rf /home/vagrant/.ssh/id_rsa /root/.ssh/id_rsa", privileged: true
     ws.vm.provision 'shell', inline: "chmod 600 /root/.ssh/id_rsa"
     ws.vm.provision 'shell', inline: "chmod 600 /home/vagrant/.ssh/id_rsa", privileged: false
     ws.vm.provision 'shell', inline: "echo 'StrictHostKeyChecking no' >> /etc/ssh/ssh_config"
@@ -51,6 +53,16 @@ Vagrant.configure("2") do |config|
     end
     client.vm.network "private_network", ip: "192.168.0.4"
     client.vm.hostname = "chefdk"
+
+    ssh_pub_key = File.readlines("./.ssh/id_rsa.pub").first.strip
+    client.vm.provision 'shell', inline: 'mkdir -p /root/.ssh'
+    client.vm.provision 'shell', inline: 'mkdir -p /home/vagrant/.ssh'
+    client.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /root/.ssh/authorized_keys"
+    client.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys", privileged: false
+    client.vm.provision 'shell', inline: "chmod 600 /root/.ssh/authorized_keys"
+    client.vm.provision 'shell', inline: "chmod 600 /home/vagrant/.ssh/authorized_keys", privileged: false
+    client.vm.provision 'shell', inline: "echo 'PasswordAuthentication no' >> /etc/ssh/ssh_config"
+
     client.vm.provision "shell", path: "dns.sh", privileged: true
     client.vm.provision "shell", path: "chef-client-install.sh", privileged: false
   end

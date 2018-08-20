@@ -9,3 +9,6 @@ https://docs.chef.io/chefdk_setup.html
 Install chef server:
 https://docs.chef.io/install_server.html
 
+Bootstrap a Node:
+https://docs.chef.io/install_bootstrap.html
+

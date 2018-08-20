@@ -22,6 +22,29 @@ Vagrant.configure("2") do |config|
     server.vm.provision "shell", path: "chef-server-install.sh", privileged: true
   end
 
+# Client
+  config.vm.define "client" do |client|
+    client.vm.box = "ubuntu/xenial64"
+    client.vm.provider "virtualbox" do |vb|
+      vb.memory = 1024
+      vb.cpus = 2
+    end
+    client.vm.network "private_network", ip: "192.168.0.4"
+    client.vm.hostname = "client"
+
+    ssh_pub_key = File.readlines("./.ssh/id_rsa.pub").first.strip
+    client.vm.provision 'shell', inline: 'mkdir -p /root/.ssh'
+    client.vm.provision 'shell', inline: 'mkdir -p /home/vagrant/.ssh'
+    client.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /root/.ssh/authorized_keys"
+    client.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys", privileged: false
+    client.vm.provision 'shell', inline: "chmod 600 /root/.ssh/authorized_keys"
+    client.vm.provision 'shell', inline: "chmod 600 /home/vagrant/.ssh/authorized_keys", privileged: false
+    client.vm.provision 'shell', inline: "echo 'PasswordAuthentication no' >> /etc/ssh/ssh_config"
+
+    client.vm.provision "shell", path: "dns.sh", privileged: true
+    client.vm.provision "shell", path: "chef-client-install.sh", privileged: false
+  end
+
 # Workstation
   config.vm.define "ws" do |ws|
     ws.vm.box = "ubuntu/xenial64"
@@ -44,26 +67,4 @@ Vagrant.configure("2") do |config|
     ws.vm.provision "shell", path: "chef-ws-install.sh", privileged: false
   end
 
-# Client
-  config.vm.define "client" do |client|
-    client.vm.box = "ubuntu/xenial64"
-    client.vm.provider "virtualbox" do |vb|
-      vb.memory = 1024
-      vb.cpus = 2
-    end
-    client.vm.network "private_network", ip: "192.168.0.4"
-    client.vm.hostname = "chefdk"
-
-    ssh_pub_key = File.readlines("./.ssh/id_rsa.pub").first.strip
-    client.vm.provision 'shell', inline: 'mkdir -p /root/.ssh'
-    client.vm.provision 'shell', inline: 'mkdir -p /home/vagrant/.ssh'
-    client.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /root/.ssh/authorized_keys"
-    client.vm.provision 'shell', inline: "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys", privileged: false
-    client.vm.provision 'shell', inline: "chmod 600 /root/.ssh/authorized_keys"
-    client.vm.provision 'shell', inline: "chmod 600 /home/vagrant/.ssh/authorized_keys", privileged: false
-    client.vm.provision 'shell', inline: "echo 'PasswordAuthentication no' >> /etc/ssh/ssh_config"
-
-    client.vm.provision "shell", path: "dns.sh", privileged: true
-    client.vm.provision "shell", path: "chef-client-install.sh", privileged: false
-  end
 end

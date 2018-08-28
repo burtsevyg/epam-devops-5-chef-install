@@ -23,5 +23,6 @@ scp root@server:/root/admin-validator.pem ~/chef-repo/.chef
 cd ~/chef-repo/
 knife ssl fetch
 
+# install chef-client on a node
 knife bootstrap client --sudo
 

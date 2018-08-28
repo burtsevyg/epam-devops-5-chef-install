@@ -12,3 +12,5 @@ https://docs.chef.io/install_server.html
 Bootstrap a Node:
 https://docs.chef.io/install_bootstrap.html
 
+Now read chef docs:
+https://docs.chef.io/

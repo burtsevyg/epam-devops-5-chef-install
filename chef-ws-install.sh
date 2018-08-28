@@ -13,9 +13,12 @@ echo 'eval "$(chef shell-init bash)"' >> ~/.bash_profile
 
 echo "export PATH=$(which ruby):\$PATH" >> ~/.bash_profile && source ~/.bash_profile
 
-chef generate app chef-repo
-
-echo '.chef' >> ~/chef-repo/.gitignore
+git config --global user.email "burtsevyg@mail.ru"
+git config --global user.name "burtsevyg"
+# generate chef-repo cookbook
+# chef generate app chef-repo
+# or clone it from github:
+git clone https://github.com/burtsevyg/chef-repo.git
 
 scp root@server:/root/admin.pem ~/chef-repo/.chef
 scp root@server:/root/admin-validator.pem ~/chef-repo/.chef
